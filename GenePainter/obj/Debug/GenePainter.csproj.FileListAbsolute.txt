@@ -1,0 +1,13 @@
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\bin\Debug\GenePainter.exe.config
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\bin\Debug\GenePainter.exe
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\bin\Debug\GenePainter.pdb
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\obj\Debug\GenePainter.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\obj\Debug\GenePainter.Form1.resources
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\obj\Debug\GenePainter.Properties.Resources.resources
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\obj\Debug\GenePainter.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\obj\Debug\GenePainter.exe
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\obj\Debug\GenePainter.pdb
+C:\Users\Administrator\Desktop\GenePainter\GenePainter\obj\Debug\GenePainter.PaintingForm.resources
+C:\Users\Administrator\Documents\GitHub\GenePainter\GenePainter\bin\Debug\GenePainter.exe.config
+C:\Users\Administrator\Documents\GitHub\GenePainter\GenePainter\obj\Debug\GenePainter.exe
+C:\Users\Administrator\Documents\GitHub\GenePainter\GenePainter\obj\Debug\GenePainter.pdb
