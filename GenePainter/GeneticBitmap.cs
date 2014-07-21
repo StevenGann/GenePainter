@@ -244,72 +244,95 @@ namespace GenePainter
 
             Bitmap tb;
             Bitmap gb;
-            Bitmap ta_t, ta_g, tb_t, tb_g, tc_t, tc_g, td_t, td_g;
+
+            Bitmap ta_t, ta_g;
+            Bitmap tb_t, tb_g;
+            Bitmap tc_t, tc_g;
+            Bitmap td_t, td_g;
+            Bitmap te_t, te_g;
+            Bitmap tf_t, tf_g;
+            Bitmap tg_t, tg_g;
+            Bitmap th_t, th_g;
+
             lock (this)
             {
                 tb = new Bitmap(targetBitmap);
                 gb = new Bitmap(generatedBitmap);
+
                 ta_t = new Bitmap(tb);
                 ta_g = new Bitmap(gb);
+
                 tb_t = new Bitmap(tb);
                 tb_g = new Bitmap(gb);
+
                 tc_t = new Bitmap(tb);
                 tc_g = new Bitmap(gb);
+
                 td_t = new Bitmap(tb);
                 td_g = new Bitmap(gb);
+
+                te_t = new Bitmap(tb);
+                te_g = new Bitmap(gb);
+
+                tf_t = new Bitmap(tb);
+                tf_g = new Bitmap(gb);
+
+                tg_t = new Bitmap(tb);
+                tg_g = new Bitmap(gb);
+
+                th_t = new Bitmap(tb);
+                th_g = new Bitmap(gb);
             }
 
             Thread threadA;
             Thread threadB;
             Thread threadC;
             Thread threadD;
-            /*
             Thread threadE;
             Thread threadF;
             Thread threadG;
             Thread threadH;
-            */
+            
             lock (this)
             { threadA = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, ta_t, ta_g, new Random(RNG.Next())); }); }
             threadA.Start();
-            //threadA.Join();
-
+            
             lock (this)
             { threadB = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, tb_t, tb_g, new Random(RNG.Next())); }); }
             threadB.Start();
-            //threadB.Join();
-
+            
             lock (this)
             { threadC = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, tc_t, tc_g, new Random(RNG.Next())); }); }
             threadC.Start();
-            //threadC.Join();
+            
+            lock (this)
+            { threadD = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, td_t, td_g, new Random(RNG.Next())); }); }
+            threadD.Start();
 
             lock (this)
-            { threadD = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8,td_t, td_g, new Random(RNG.Next())); }); }
-            threadD.Start();
-            //threadD.Join();
-            /*
-            threadE = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            { threadE = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, te_t, te_g, new Random(RNG.Next())); }); }
             threadE.Start();
-            threadE.Join();
 
-            threadF = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            lock (this)
+            { threadF = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, tf_t, tf_g, new Random(RNG.Next())); }); }
             threadF.Start();
-            threadF.Join();
 
-            threadG = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            lock (this)
+            { threadG = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, tg_t, tg_g, new Random(RNG.Next())); }); }
             threadG.Start();
-            threadG.Join();
 
-            threadH = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            lock (this)
+            { threadH = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, th_t, th_g, new Random(RNG.Next())); }); }
             threadH.Start();
-            threadH.Join();
-            */
 
             threadA.Join();
             threadB.Join();
             threadC.Join();
             threadD.Join();
+            threadE.Join();
+            threadF.Join();
+            threadG.Join();
+            threadH.Join();
 
             //fitness += FitnessThreadMethod(sampleSize, new Bitmap(targetBitmap), new Bitmap(generatedBitmap), new Random(RNG.Next()));
 
