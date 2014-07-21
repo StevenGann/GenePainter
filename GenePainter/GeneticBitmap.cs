@@ -425,6 +425,9 @@ namespace GenePainter
                         index++;
                         int sh = (int)(((float)genome[index] / 255.0f) * (float)th);
 
+                        sx -= (int)(sw / 2);
+                        sy -= (int)(sh / 2);
+
                         sw = (int)((float)sw * (1.0f - ((float)index / (float)(genome.Size * 10))));
                         sh = (int)((float)sh * (1.0f - ((float)index / (float)(genome.Size * 10))));
 
@@ -462,6 +465,9 @@ namespace GenePainter
                         int sw = (int)(((float)genome[index] / 255.0f) * (float)tw);
                         index++;
                         int sh = (int)(((float)genome[index] / 255.0f) * (float)th);
+
+                        sx -= (int)(sw / 2);
+                        sy -= (int)(sh / 2);
 
                         sw = (int)((float)sw * (1.0f - ((float)index / (float)(genome.Size * 10))));
                         sh = (int)((float)sh * (1.0f - ((float)index / (float)(genome.Size * 10))));
