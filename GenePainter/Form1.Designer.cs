@@ -558,9 +558,7 @@
             this.comboBoxStyle.Items.AddRange(new object[] {
             "Rectangles",
             "Ellipses",
-            "Triangles",
-            "Stars",
-            "Mixed"});
+            "Text"});
             this.comboBoxStyle.Location = new System.Drawing.Point(47, 4);
             this.comboBoxStyle.Name = "comboBoxStyle";
             this.comboBoxStyle.Size = new System.Drawing.Size(333, 21);

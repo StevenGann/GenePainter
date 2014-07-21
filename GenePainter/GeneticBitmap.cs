@@ -261,21 +261,25 @@ namespace GenePainter
             Thread threadG;
             Thread threadH;
             */
-            threadA = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 4, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            lock (this)
+            { threadA = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
             threadA.Start();
-            threadA.Join();
+            //threadA.Join();
 
-            threadB = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 4, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            lock (this)
+            { threadB = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
             threadB.Start();
-            threadB.Join();
+            //threadB.Join();
 
-            threadC = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 4, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            lock (this)
+            { threadC = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
             threadC.Start();
-            threadC.Join();
+            //threadC.Join();
 
-            threadD = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 4, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            lock (this)
+            { threadD = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
             threadD.Start();
-            threadD.Join();
+            //threadD.Join();
             /*
             threadE = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
             threadE.Start();
@@ -293,7 +297,12 @@ namespace GenePainter
             threadH.Start();
             threadH.Join();
             */
-            
+
+            threadA.Join();
+            threadB.Join();
+            threadC.Join();
+            threadD.Join();
+
             //fitness += FitnessThreadMethod(sampleSize, new Bitmap(targetBitmap), new Bitmap(generatedBitmap), new Random(RNG.Next()));
 
             if (fitness > bestFitness) 
@@ -475,6 +484,44 @@ namespace GenePainter
                         Color color = Color.FromArgb(ca, cr, cg, cb);
                         SolidBrush brush = new SolidBrush(color);
                         g.FillEllipse(brush, sx, sy, sw, sh);
+                    }
+
+                    index++;
+                }
+            }
+
+            if (style == 2)
+            {
+                SolidBrush bkg = new SolidBrush(Color.Gray);
+                g.FillRectangle(bkg, 0, 0, tw, th);
+                int index = 0;
+                while (index <= genome.Size)
+                {
+                    if ((genome.Size - index) >= 8)
+                    {
+
+                        int ca = genome[index];
+                        index++;
+                        int cr = genome[index];
+                        index++;
+                        int cg = genome[index];
+                        index++;
+                        int cb = genome[index];
+                        index++;
+                        String ts = Convert.ToString(Convert.ToChar(genome[index]));
+                        index++;
+                        int fs = genome[index] + 1;
+                        index++;
+                        int sx = (int)(((float)genome[index] / 255.0f) * (float)tw);
+                        index++;
+                        int sy = (int)(((float)genome[index] / 255.0f) * (float)th);
+
+                        sx -= (int)(fs / 2);
+                        sy -= (int)(fs / 2);
+
+                        Color color = Color.FromArgb(ca, cr, cg, cb);
+                        SolidBrush brush = new SolidBrush(color);
+                        g.DrawString(ts, new Font("Arial", fs, FontStyle.Bold), brush, (float)sx, (float)sy);
                     }
 
                     index++;

@@ -146,13 +146,11 @@ namespace GenePainter
                 {
                     form.geneticbitmap.style = 1;
                 }
-                //Ellipses
-                //Triangles
-                //Stars
-                //Mixed
 
-
-
+                if (comboBoxStyle.Text == "Text")
+                {
+                    form.geneticbitmap.style = 2;
+                }
 
 
                 form.Show();
