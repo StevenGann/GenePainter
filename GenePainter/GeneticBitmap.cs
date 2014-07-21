@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace GenePainter
 {
@@ -233,61 +234,25 @@ namespace GenePainter
 
             int sampleSize = (int)((float)((int)targetBitmap.Width * (int)targetBitmap.Height) * ((float)accuracy/100.0f));
 
-            for (int i = 0; i < sampleSize; i++)
+            
+            Thread threadA;
+            Thread threadB;
+
+            lock (this)
             {
-                int rx;
-                int ry;
-
-                
-                rx = RNG.Next(0, (int)targetBitmap.Width);
-                ry = RNG.Next(0, (int)targetBitmap.Height);
-                
-
-                //Generated Color Values
-                byte tRed;
-                byte tGreen;
-                byte tBlue;
-                //byte tAlpha;
-                //Generated Color Values
-                byte gRed;
-                byte gGreen;
-                byte gBlue;
-                //byte gAlpha;
-
-                //get the target color values
-                Color tColor = targetBitmap.GetPixel(rx, ry);
-                tRed = tColor.R;
-                tBlue = tColor.B;
-                tGreen = tColor.G;
-                //get the generated color values
-                Color gColor = new Color();
-                lock (this)
-                {
-                    gColor = generatedBitmap.GetPixel(rx, ry);
-                }
-                gRed = gColor.R;
-                gBlue = gColor.B;
-                gGreen = gColor.G;
-
-                //get the color differences
-                double RedError = Math.Abs(tRed - gRed);
-                double GreenError = Math.Abs(tGreen - gGreen);
-                double BlueError = Math.Abs(tBlue - gBlue);
-
-                //=======================================================
-                //Actual fitness function
-                //-------------------------------------------------------
-
-                float RedGrade = 1.0f - ((float)RedError / (float)255);
-                float GreenGrade = 1.0f - ((float)GreenError / (float)255);
-                float BlueGrade = 1.0f - ((float)BlueError / (float)255);
-
-                fitness += (float)(Math.Pow((double)(RedGrade + GreenGrade + BlueGrade), (double)3));
-
-                //=======================================================
+                threadA = new Thread(() => { fitness += FitnessThreadMethod(sampleSize, new Bitmap(targetBitmap), new Bitmap(generatedBitmap), new Random(RNG.Next())); });
+            }
+            lock (this)
+            {
+                threadB = new Thread(() => { fitness += FitnessThreadMethod(sampleSize, new Bitmap(targetBitmap), new Bitmap(generatedBitmap), new Random(RNG.Next())); });
             }
 
-            
+            threadA.Start();
+            threadB.Start();
+            threadA.Join();
+            threadB.Join();
+
+            //fitness += FitnessThreadMethod(sampleSize, new Bitmap(targetBitmap), new Bitmap(generatedBitmap), new Random(RNG.Next()));
 
             if (fitness > bestFitness) 
             { 
@@ -316,14 +281,86 @@ namespace GenePainter
             return (int)fitness;
         }
 
+        private float FitnessThreadMethod(int localSampleSize, Bitmap localTarget, Bitmap localGenerated, Random localRNG)
+        {
+
+            float fitness = 0;
+
+            for (int i = 0; i < localSampleSize; i++)
+            {
+                int rx;
+                int ry;
+
+
+                rx = localRNG.Next(0, (int)localTarget.Width);
+                ry = localRNG.Next(0, (int)localTarget.Height);
+                
+
+                //Generated Color Values
+                byte tRed;
+                byte tGreen;
+                byte tBlue;
+                //byte tAlpha;
+                //Generated Color Values
+                byte gRed;
+                byte gGreen;
+                byte gBlue;
+                //byte gAlpha;
+
+                //get the target color values
+                Color tColor = localTarget.GetPixel(rx, ry);
+                tRed = tColor.R;
+                tBlue = tColor.B;
+                tGreen = tColor.G;
+
+                //get the generated color values
+                Color gColor = new Color();
+                gColor = localGenerated.GetPixel(rx, ry);
+                
+                gRed = gColor.R;
+                gBlue = gColor.B;
+                gGreen = gColor.G;
+
+                //get the color differences
+                double RedError = Math.Abs(tRed - gRed);
+                double GreenError = Math.Abs(tGreen - gGreen);
+                double BlueError = Math.Abs(tBlue - gBlue);
+
+                //=======================================================
+                //Actual fitness function
+                //-------------------------------------------------------
+
+                float RedGrade = 1.0f - ((float)RedError / (float)255);
+                float GreenGrade = 1.0f - ((float)GreenError / (float)255);
+                float BlueGrade = 1.0f - ((float)BlueError / (float)255);
+
+                fitness += (float)(Math.Pow((double)(RedGrade + GreenGrade + BlueGrade), (double)3));
+
+                //=======================================================
+            }
+
+            return fitness;
+        }
+
         public Bitmap GenomeToBitmap(Genome genome)
         {
             int index = 0;
-            Bitmap output = new Bitmap(targetBitmap.Width, targetBitmap.Height);
+            int th;
+            int tw;
+
+            lock (this)
+            {
+                tw = targetBitmap.Width;
+                th = targetBitmap.Height;
+            }
+
+            Bitmap output = new Bitmap(tw, th);
             Graphics g = Graphics.FromImage(output);
 
             SolidBrush bkg = new SolidBrush(Color.Gray);
-            g.FillRectangle(bkg, 0, 0, targetBitmap.Width, targetBitmap.Height);
+            
+          
+            g.FillRectangle(bkg, 0, 0, tw, th);
 
             while (index <= genome.Size)
             {
@@ -338,13 +375,13 @@ namespace GenePainter
                     index++;
                     int cb = genome[index];
                     index++;
-                    int sx = (int)(((float)genome[index] / 255.0f) * (float)targetBitmap.Width);
+                    int sx = (int)(((float)genome[index] / 255.0f) * (float)tw);
                     index++;
-                    int sy = (int)(((float)genome[index] / 255.0f) * (float)targetBitmap.Height);
+                    int sy = (int)(((float)genome[index] / 255.0f) * (float)th);
                     index++;
-                    int sw = (int)(((float)genome[index] / 255.0f) * (float)targetBitmap.Width);
+                    int sw = (int)(((float)genome[index] / 255.0f) * (float)tw);
                     index++;
-                    int sh = (int)(((float)genome[index] / 255.0f) * (float)targetBitmap.Height);
+                    int sh = (int)(((float)genome[index] / 255.0f) * (float)th);
 
                     sw = (int)((float)sw * (1.0f - ((float)index / (float)(genome.Size * 10))));
                     sh = (int)((float)sh * (1.0f - ((float)index / (float)(genome.Size * 10))));
