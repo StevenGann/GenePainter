@@ -27,6 +27,7 @@ namespace GenePainter
         public int genomeLength = 3200;
         public int plateauMax = 100;
         public int maxGenerations = 10000;
+        public int style = 0;
 
         public bool genomeDynamic = true;
         public bool keepBest = true;
@@ -195,6 +196,13 @@ namespace GenePainter
             while (index <= maxChampions)
             {
                 population[index] = champions[index];
+                index++;
+            }
+
+            for (int i = 0; i <= (int)((float)populationSize / 10.0f); i++)
+            {
+                int a = RNG.Next(maxChampions);
+                population[index] = new Genome(champions[a], new Genome(genomeLength, RNG.Next()), RNG.Next());
                 index++;
             }
 
@@ -378,7 +386,7 @@ namespace GenePainter
 
         public Bitmap GenomeToBitmap(Genome genome)
         {
-            int index = 0;
+            
             int th;
             int tw;
 
@@ -391,41 +399,80 @@ namespace GenePainter
             Bitmap output = new Bitmap(tw, th);
             Graphics g = Graphics.FromImage(output);
 
-            SolidBrush bkg = new SolidBrush(Color.Gray);
-            
-          
-            g.FillRectangle(bkg, 0, 0, tw, th);
-
-            while (index <= genome.Size)
+            if (style == 0)
             {
-                if ((genome.Size - index) >= 8)
+                SolidBrush bkg = new SolidBrush(Color.Gray);
+                g.FillRectangle(bkg, 0, 0, tw, th);
+                int index = 0;
+                while (index <= genome.Size)
                 {
+                    if ((genome.Size - index) >= 8)
+                    {
 
-                    int ca = genome[index];
-                    index++;
-                    int cr = genome[index];
-                    index++;
-                    int cg = genome[index];
-                    index++;
-                    int cb = genome[index];
-                    index++;
-                    int sx = (int)(((float)genome[index] / 255.0f) * (float)tw);
-                    index++;
-                    int sy = (int)(((float)genome[index] / 255.0f) * (float)th);
-                    index++;
-                    int sw = (int)(((float)genome[index] / 255.0f) * (float)tw);
-                    index++;
-                    int sh = (int)(((float)genome[index] / 255.0f) * (float)th);
+                        int ca = genome[index];
+                        index++;
+                        int cr = genome[index];
+                        index++;
+                        int cg = genome[index];
+                        index++;
+                        int cb = genome[index];
+                        index++;
+                        int sx = (int)(((float)genome[index] / 255.0f) * (float)tw);
+                        index++;
+                        int sy = (int)(((float)genome[index] / 255.0f) * (float)th);
+                        index++;
+                        int sw = (int)(((float)genome[index] / 255.0f) * (float)tw);
+                        index++;
+                        int sh = (int)(((float)genome[index] / 255.0f) * (float)th);
 
-                    sw = (int)((float)sw * (1.0f - ((float)index / (float)(genome.Size * 10))));
-                    sh = (int)((float)sh * (1.0f - ((float)index / (float)(genome.Size * 10))));
+                        sw = (int)((float)sw * (1.0f - ((float)index / (float)(genome.Size * 10))));
+                        sh = (int)((float)sh * (1.0f - ((float)index / (float)(genome.Size * 10))));
 
-                    Color color = Color.FromArgb(ca, cr, cg, cb);
-                    SolidBrush brush = new SolidBrush(color);
-                    g.FillRectangle(brush, sx, sy, sw, sh);
+                        Color color = Color.FromArgb(ca, cr, cg, cb);
+                        SolidBrush brush = new SolidBrush(color);
+                        g.FillRectangle(brush, sx, sy, sw, sh);
+                    }
+
+                    index++;
                 }
+            }
 
-                index++;
+            if (style == 1)
+            {
+                SolidBrush bkg = new SolidBrush(Color.Gray);
+                g.FillRectangle(bkg, 0, 0, tw, th);
+                int index = 0;
+                while (index <= genome.Size)
+                {
+                    if ((genome.Size - index) >= 8)
+                    {
+
+                        int ca = genome[index];
+                        index++;
+                        int cr = genome[index];
+                        index++;
+                        int cg = genome[index];
+                        index++;
+                        int cb = genome[index];
+                        index++;
+                        int sx = (int)(((float)genome[index] / 255.0f) * (float)tw);
+                        index++;
+                        int sy = (int)(((float)genome[index] / 255.0f) * (float)th);
+                        index++;
+                        int sw = (int)(((float)genome[index] / 255.0f) * (float)tw);
+                        index++;
+                        int sh = (int)(((float)genome[index] / 255.0f) * (float)th);
+
+                        sw = (int)((float)sw * (1.0f - ((float)index / (float)(genome.Size * 10))));
+                        sh = (int)((float)sh * (1.0f - ((float)index / (float)(genome.Size * 10))));
+
+                        Color color = Color.FromArgb(ca, cr, cg, cb);
+                        SolidBrush brush = new SolidBrush(color);
+                        g.FillEllipse(brush, sx, sy, sw, sh);
+                    }
+
+                    index++;
+                }
             }
 
             return output;

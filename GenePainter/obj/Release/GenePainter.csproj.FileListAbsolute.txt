@@ -16,3 +16,4 @@ C:\Users\Administrator\Documents\GitHub\GenePainter\GenePainter\obj\Release\Gene
 C:\Users\Administrator\Documents\GitHub\GenePainter\GenePainter\obj\Release\GenePainter.PaintingForm.resources
 C:\Users\Administrator\Documents\GitHub\GenePainter\GenePainter\obj\Release\GenePainter.Properties.Resources.resources
 C:\Users\Administrator\Documents\GitHub\GenePainter\GenePainter\obj\Release\GenePainter.csproj.GenerateResource.Cache
+C:\Users\Administrator\Documents\GitHub\GenePainter\GenePainter\obj\Release\GenePainter.csprojResolveAssemblyReference.cache

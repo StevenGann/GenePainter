@@ -127,6 +127,7 @@ namespace GenePainter
                 form.geneticbitmap.genomeLength = Convert.ToInt32(textBoxGenComplex.Text);
                 form.geneticbitmap.plateauMax = Convert.ToInt32(textBoxPlatLen.Text);
                 form.geneticbitmap.maxGenerations = Convert.ToInt32(textBoxGenerations.Text);
+                form.geneticbitmap.style = 0;
 
                 form.geneticbitmap.genomeDynamic = checkBoxDynGen.Checked;
                 form.geneticbitmap.keepBest = checkBoxKeepBest.Checked;
@@ -134,8 +135,21 @@ namespace GenePainter
                 form.geneticbitmap.ruinPlateaus = checkBoxPlat.Checked;
                 form.geneticbitmap.useLog = checkBoxLog.Checked;
                 form.geneticbitmap.infinite = checkBoxInfinity.Checked;
+                
 
+                if (comboBoxStyle.Text == "Rectangles")
+                {
+                    form.geneticbitmap.style = 0;
+                }
 
+                if (comboBoxStyle.Text == "Ellipses")
+                {
+                    form.geneticbitmap.style = 1;
+                }
+                //Ellipses
+                //Triangles
+                //Stars
+                //Mixed
 
 
 

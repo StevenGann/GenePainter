@@ -557,8 +557,8 @@
             this.comboBoxStyle.FormattingEnabled = true;
             this.comboBoxStyle.Items.AddRange(new object[] {
             "Rectangles",
-            "Triangles",
             "Ellipses",
+            "Triangles",
             "Stars",
             "Mixed"});
             this.comboBoxStyle.Location = new System.Drawing.Point(47, 4);

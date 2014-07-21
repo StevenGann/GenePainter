@@ -126,6 +126,7 @@ namespace GenePainter
             {
                 if (RNG.Next(100) <= rate)
                 {
+                    //geneList[i] = (byte)RNG.Next(255);
                     geneList[i] += (byte)RNG.Next(255 - (int)geneList[i]);
                     geneList[i] -= (byte)RNG.Next((int)geneList[i]);
                 }
