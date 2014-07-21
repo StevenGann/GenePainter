@@ -12,7 +12,7 @@ namespace GenePainter
 {
     public partial class PaintingForm : Form
     {
-        GeneticBitmap geneticbitmap;
+        public GeneticBitmap geneticbitmap;
         public Bitmap target;
 
         public PaintingForm()
@@ -40,6 +40,24 @@ namespace GenePainter
 
             textBoxGeneration.Text = Convert.ToString(geneticbitmap.PublicStatus.Generation);
         }
+
+        private void butonSaveBest_Click(object sender, EventArgs e)
+        {
+            
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "Bitmap Files(*.BMP)|*.BMP|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                geneticbitmap.PublicStatus.BestBitmap.Save(saveFileDialog1.FileName);
+            }
+            
+        }
+
+        
 
     }
 }

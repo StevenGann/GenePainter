@@ -11,26 +11,29 @@ using System.Runtime.InteropServices;
 
 namespace GenePainter
 {
-    class GeneticBitmap
+    public class GeneticBitmap
     {
         Random RNG;
         BackgroundWorker worker;
         Bitmap targetBitmap;
 
+        //GA Options
+        //=============================
         public int populationSize = 200;
-        int maxChampions = 5;
-        int mutationRate = 5;
-        int accuracy = 75;
-        int genomeLength = 3200;
-        int plateauMax = 100;
-        int maxGenerations = 10000;
+        public int maxChampions = 5;
+        public int mutationRate = 5;
+        public int accuracy = 75;
+        public int genomeLength = 3200;
+        public int plateauMax = 100;
+        public int maxGenerations = 10000;
 
-        bool genomeDynamic = true;
-        bool keepBest = true;
-        bool restoreDinosaurs = false;
-        bool ruinPlateaus = false;
-        bool useLog = true;
-        bool infinite = false;
+        public bool genomeDynamic = true;
+        public bool keepBest = true;
+        public bool restoreDinosaurs = false;
+        public bool ruinPlateaus = false;
+        public bool useLog = true;
+        public bool infinite = false;
+        //=============================
 
         public int generation = 0;
         public Genome bestGenome;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GenePainter
 {
-    class Genome
+    public class Genome
     {
         private List<byte> geneList;
         private Random RNG;

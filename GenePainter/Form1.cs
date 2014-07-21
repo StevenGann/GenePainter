@@ -119,6 +119,28 @@ namespace GenePainter
             {
                 PaintingForm form = new PaintingForm();
                 form.target = targetBitmap;
+
+                form.geneticbitmap.populationSize = Convert.ToInt32(textBoxPopSize.Text);
+                form.geneticbitmap.maxChampions = Convert.ToInt32(textBoxChampRate.Text);
+                form.geneticbitmap.mutationRate = Convert.ToInt32(textBoxMuteRate.Text);
+                form.geneticbitmap.accuracy = Convert.ToInt32(textBoxFitnessAcc.Text);
+                form.geneticbitmap.genomeLength = Convert.ToInt32(textBoxGenComplex.Text);
+                form.geneticbitmap.plateauMax = Convert.ToInt32(textBoxPlatLen.Text);
+                form.geneticbitmap.maxGenerations = Convert.ToInt32(textBoxGenerations.Text);
+
+                form.geneticbitmap.genomeDynamic = checkBoxDynGen.Checked;
+                form.geneticbitmap.keepBest = checkBoxKeepBest.Checked;
+                form.geneticbitmap.restoreDinosaurs = checkBoxDinosaur.Checked;
+                form.geneticbitmap.ruinPlateaus = checkBoxPlat.Checked;
+                form.geneticbitmap.useLog = checkBoxLog.Checked;
+                form.geneticbitmap.infinite = checkBoxInfinity.Checked;
+
+
+
+
+
+
+
                 form.Show();
 
                 

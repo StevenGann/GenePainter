@@ -31,10 +31,12 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.textBoxTargetPath = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -45,6 +47,7 @@
             this.trackBarGenerations = new System.Windows.Forms.TrackBar();
             this.label9 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBoxInfinity = new System.Windows.Forms.CheckBox();
             this.checkBoxDynGen = new System.Windows.Forms.CheckBox();
             this.checkBoxLog = new System.Windows.Forms.CheckBox();
             this.checkBoxKeepBest = new System.Windows.Forms.CheckBox();
@@ -73,9 +76,6 @@
             this.comboBoxStyle = new System.Windows.Forms.ComboBox();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBoxInfinity = new System.Windows.Forms.CheckBox();
-            this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -103,6 +103,12 @@
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(89, 17);
+            this.toolStripStatusLabel1.Text = "Status: Need File";
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -126,15 +132,21 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.openToolStripMenuItem.Text = "Open Image";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.saveToolStripMenuItem.Text = "Open Config";
+            // 
+            // saveConfigToolStripMenuItem
+            // 
+            this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
+            this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.saveConfigToolStripMenuItem.Text = "Save Config";
             // 
             // buttonOpen
             // 
@@ -242,7 +254,6 @@
             this.trackBarGenerations.TabIndex = 28;
             this.trackBarGenerations.TickFrequency = 1000;
             this.trackBarGenerations.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBarGenerations.Value = 1000;
             this.trackBarGenerations.Scroll += new System.EventHandler(this.trackBarGenerations_Scroll);
             // 
             // label9
@@ -268,6 +279,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(382, 71);
             this.panel1.TabIndex = 26;
+            // 
+            // checkBoxInfinity
+            // 
+            this.checkBoxInfinity.AutoSize = true;
+            this.checkBoxInfinity.Location = new System.Drawing.Point(142, 49);
+            this.checkBoxInfinity.Name = "checkBoxInfinity";
+            this.checkBoxInfinity.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxInfinity.TabIndex = 26;
+            this.checkBoxInfinity.Text = "Run Forever";
+            this.toolTip1.SetToolTip(this.checkBoxInfinity, "Keep running until something kills it.");
+            this.checkBoxInfinity.UseVisualStyleBackColor = true;
             // 
             // checkBoxDynGen
             // 
@@ -351,7 +373,6 @@
             this.trackBarPlatLen.TabIndex = 22;
             this.trackBarPlatLen.TickFrequency = 10;
             this.trackBarPlatLen.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBarPlatLen.Value = 100;
             this.trackBarPlatLen.Scroll += new System.EventHandler(this.trackBarPlatLen_Scroll);
             // 
             // label7
@@ -381,18 +402,17 @@
             this.textBoxGenComplex.Name = "textBoxGenComplex";
             this.textBoxGenComplex.Size = new System.Drawing.Size(65, 20);
             this.textBoxGenComplex.TabIndex = 17;
-            this.textBoxGenComplex.Text = "100";
+            this.textBoxGenComplex.Text = "3200";
             // 
             // trackBarGenComplex
             // 
             this.trackBarGenComplex.Location = new System.Drawing.Point(112, 224);
-            this.trackBarGenComplex.Maximum = 500;
+            this.trackBarGenComplex.Maximum = 8000;
             this.trackBarGenComplex.Name = "trackBarGenComplex";
             this.trackBarGenComplex.Size = new System.Drawing.Size(196, 42);
             this.trackBarGenComplex.TabIndex = 16;
-            this.trackBarGenComplex.TickFrequency = 10;
+            this.trackBarGenComplex.TickFrequency = 100;
             this.trackBarGenComplex.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBarGenComplex.Value = 100;
             this.trackBarGenComplex.Scroll += new System.EventHandler(this.trackBarGenComplex_Scroll);
             // 
             // label6
@@ -422,7 +442,6 @@
             this.trackBarFitnessAcc.TabIndex = 12;
             this.trackBarFitnessAcc.TickFrequency = 5;
             this.trackBarFitnessAcc.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBarFitnessAcc.Value = 5;
             this.trackBarFitnessAcc.Scroll += new System.EventHandler(this.trackBarFitnessAcc_Scroll);
             // 
             // label5
@@ -452,7 +471,6 @@
             this.trackBarMuteRate.TabIndex = 9;
             this.trackBarMuteRate.TickFrequency = 5;
             this.trackBarMuteRate.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBarMuteRate.Value = 5;
             this.trackBarMuteRate.Scroll += new System.EventHandler(this.trackBarMuteRate_Scroll);
             // 
             // label4
@@ -481,7 +499,6 @@
             this.trackBarChampRate.Size = new System.Drawing.Size(216, 42);
             this.trackBarChampRate.TabIndex = 6;
             this.trackBarChampRate.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBarChampRate.Value = 5;
             this.trackBarChampRate.Scroll += new System.EventHandler(this.trackBarChampRate_Scroll);
             // 
             // label3
@@ -511,7 +528,6 @@
             this.trackBarPopSize.TabIndex = 3;
             this.trackBarPopSize.TickFrequency = 10;
             this.trackBarPopSize.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
-            this.trackBarPopSize.Value = 100;
             this.trackBarPopSize.Scroll += new System.EventHandler(this.trackBarPopSize_Scroll);
             // 
             // label2
@@ -549,29 +565,6 @@
             this.comboBoxStyle.Name = "comboBoxStyle";
             this.comboBoxStyle.Size = new System.Drawing.Size(333, 21);
             this.comboBoxStyle.TabIndex = 0;
-            // 
-            // checkBoxInfinity
-            // 
-            this.checkBoxInfinity.AutoSize = true;
-            this.checkBoxInfinity.Location = new System.Drawing.Point(142, 49);
-            this.checkBoxInfinity.Name = "checkBoxInfinity";
-            this.checkBoxInfinity.Size = new System.Drawing.Size(85, 17);
-            this.checkBoxInfinity.TabIndex = 26;
-            this.checkBoxInfinity.Text = "Run Forever";
-            this.toolTip1.SetToolTip(this.checkBoxInfinity, "Keep running until something kills it.");
-            this.checkBoxInfinity.UseVisualStyleBackColor = true;
-            // 
-            // saveConfigToolStripMenuItem
-            // 
-            this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
-            this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.saveConfigToolStripMenuItem.Text = "Save Config";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(89, 17);
-            this.toolStripStatusLabel1.Text = "Status: Need File";
             // 
             // Form1
             // 

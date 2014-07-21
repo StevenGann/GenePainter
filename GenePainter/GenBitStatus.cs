@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GenePainter
 {
-    class GenBitStatus
+    public class GenBitStatus
     {
         public Bitmap CurrentBitmap;
         public int CurrentFitness;
