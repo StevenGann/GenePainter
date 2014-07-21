@@ -233,7 +233,15 @@ namespace GenePainter
             }
 
         }
-
+        public class TheBitmaps(){//<--Change made here
+                    Bitmap target {get; set;}
+                    Bitmap gen {get; set;}
+            public TheBitmaps(Bitmap t; Bitmap g){
+                        target = t;
+                        gen = g;
+             }
+        }
+        
         private int FitnessFunction(Genome genome)
         {
             float fitness = 0;
@@ -244,11 +252,14 @@ namespace GenePainter
 
             Bitmap tb;
             Bitmap gb;
+            TheBitmaps bits; //<--Change made here
 
             lock (this)
             {
                 tb = new Bitmap(targetBitmap);
                 gb = new Bitmap(generatedBitmap);
+                
+                bits = new TheBitmaps(tb, gb);//<--Change made here
             }
 
             Thread threadA;
@@ -265,6 +276,16 @@ namespace GenePainter
             { threadA = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
             threadA.Start();
             //threadA.Join();
+            
+            threadA = new System.Threading.Thread(new System.Threading.ThreadStart(delegate(){ //<--Change made here
+                bits.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal,new Action(delegate()
+                    {
+                      fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(bits.target), new Bitmap(bits.gen), new Random(RNG.Next()));
+                    }
+                ));
+              }
+          ));
+
 
             lock (this)
             { threadB = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
