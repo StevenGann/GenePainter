@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -233,15 +233,7 @@ namespace GenePainter
             }
 
         }
-        public class TheBitmaps(){//<--Change made here
-                    Bitmap target {get; set;}
-                    Bitmap gen {get; set;}
-            public TheBitmaps(Bitmap t; Bitmap g){
-                        target = t;
-                        gen = g;
-             }
-        }
-        
+            
         private int FitnessFunction(Genome genome)
         {
             float fitness = 0;
@@ -252,14 +244,19 @@ namespace GenePainter
 
             Bitmap tb;
             Bitmap gb;
-            TheBitmaps bits; //<--Change made here
-
+            Bitmap ta_t, ta_g, tb_t, tb_g, tc_t, tc_g, td_t, td_g;
             lock (this)
             {
                 tb = new Bitmap(targetBitmap);
                 gb = new Bitmap(generatedBitmap);
-                
-                bits = new TheBitmaps(tb, gb);//<--Change made here
+                ta_t = new Bitmap(tb);
+                ta_g = new Bitmap(gb);
+                tb_t = new Bitmap(tb);
+                tb_g = new Bitmap(gb);
+                tc_t = new Bitmap(tb);
+                tc_g = new Bitmap(gb);
+                td_t = new Bitmap(tb);
+                td_g = new Bitmap(gb);
             }
 
             Thread threadA;
@@ -273,32 +270,22 @@ namespace GenePainter
             Thread threadH;
             */
             lock (this)
-            { threadA = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
+            { threadA = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, ta_t, ta_g, new Random(RNG.Next())); }); }
             threadA.Start();
             //threadA.Join();
-            
-            threadA = new System.Threading.Thread(new System.Threading.ThreadStart(delegate(){ //<--Change made here
-                bits.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal,new Action(delegate()
-                    {
-                      fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(bits.target), new Bitmap(bits.gen), new Random(RNG.Next()));
-                    }
-                ));
-              }
-          ));
-
 
             lock (this)
-            { threadB = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
+            { threadB = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, tb_t, tb_g, new Random(RNG.Next())); }); }
             threadB.Start();
             //threadB.Join();
 
             lock (this)
-            { threadC = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
+            { threadC = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, tc_t, tc_g, new Random(RNG.Next())); }); }
             threadC.Start();
             //threadC.Join();
 
             lock (this)
-            { threadD = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); }); }
+            { threadD = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8,td_t, td_g, new Random(RNG.Next())); }); }
             threadD.Start();
             //threadD.Join();
             /*
