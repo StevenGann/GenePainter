@@ -234,24 +234,58 @@ namespace GenePainter
 
             int sampleSize = (int)((float)((int)targetBitmap.Width * (int)targetBitmap.Height) * ((float)accuracy/100.0f));
 
-            
+            Bitmap tb;
+            Bitmap gb;
+
+            lock (this)
+            {
+                tb = new Bitmap(targetBitmap);
+                gb = new Bitmap(generatedBitmap);
+            }
+
             Thread threadA;
             Thread threadB;
-
-            lock (this)
-            {
-                threadA = new Thread(() => { fitness += FitnessThreadMethod(sampleSize, new Bitmap(targetBitmap), new Bitmap(generatedBitmap), new Random(RNG.Next())); });
-            }
-            lock (this)
-            {
-                threadB = new Thread(() => { fitness += FitnessThreadMethod(sampleSize, new Bitmap(targetBitmap), new Bitmap(generatedBitmap), new Random(RNG.Next())); });
-            }
-
+            Thread threadC;
+            Thread threadD;
+            /*
+            Thread threadE;
+            Thread threadF;
+            Thread threadG;
+            Thread threadH;
+            */
+            threadA = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 4, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
             threadA.Start();
-            threadB.Start();
             threadA.Join();
+
+            threadB = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 4, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            threadB.Start();
             threadB.Join();
 
+            threadC = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 4, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            threadC.Start();
+            threadC.Join();
+
+            threadD = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 4, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            threadD.Start();
+            threadD.Join();
+            /*
+            threadE = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            threadE.Start();
+            threadE.Join();
+
+            threadF = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            threadF.Start();
+            threadF.Join();
+
+            threadG = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            threadG.Start();
+            threadG.Join();
+
+            threadH = new Thread(() => { fitness += FitnessThreadMethod((int)sampleSize / 8, new Bitmap(tb), new Bitmap(gb), new Random(RNG.Next())); });
+            threadH.Start();
+            threadH.Join();
+            */
+            
             //fitness += FitnessThreadMethod(sampleSize, new Bitmap(targetBitmap), new Bitmap(generatedBitmap), new Random(RNG.Next()));
 
             if (fitness > bestFitness) 
@@ -269,7 +303,7 @@ namespace GenePainter
 
             Console.Write("*");
 
-            Status.CurrentBitmap = GenomeToBitmap(genome);
+            Status.CurrentBitmap = generatedBitmap;//GenomeToBitmap(genome);
             Status.CurrentFitness = (int)fitness;
             Status.CurrentComplexity = genome.Size;
 
