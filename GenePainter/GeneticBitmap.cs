@@ -445,6 +445,7 @@ namespace GenePainter
             g.InterpolationMode = InterpolationMode.NearestNeighbor;
             g.CompositingMode = CompositingMode.SourceOver;
 
+
             if (style == 0)
             {
                 SolidBrush bkg = new SolidBrush(Color.Gray);
