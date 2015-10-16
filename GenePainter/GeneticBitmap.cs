@@ -96,7 +96,7 @@ namespace GenePainter
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             //Insert heavy stuff here.
-            GeneticAlgorithm();
+            GeneticAlgorithmThreaded();
             
         }
 
@@ -144,6 +144,58 @@ namespace GenePainter
             { }
         }
         //==================================================================================
+        private void GeneticAlgorithmThreaded()
+        {
+            //Create initial population. Not threaded.
+            Console.WriteLine("Creating Initial Population\n");
+            for (int i = 0; i <= populationSize; i++)
+            {
+                population.Insert(i, new Genome(genomeLength, RNG.Next()));
+            }
+
+            for (int i = 0; i <= maxChampions; i++)
+            {
+                champions.Insert(i, new Genome(genomeLength, RNG.Next()));
+            }
+
+            Console.WriteLine("Done. Starting Evolution.\n");
+            while (generation <= maxGenerations)
+            {
+                Status.Generation = generation;
+
+                // 1. Test Fitnesses
+                Console.WriteLine("Generation: " + Convert.ToString(generation));
+                Console.WriteLine("Testing Fitness");
+                //for (int i = 0; i <= populationSize; i++)
+                Parallel.For(0, populationSize, i
+                =>
+                {
+                    //population[i].Fitness = FitnessFunction(population[i]);
+                    int f = FitnessFunction(population[i]);
+                    population[i].Fitness = f;
+                    //GenerationProgress = (int)(100 * i / populationSize);
+                    if (GenerationProgress < (int)(100 * i / populationSize)) //Not exactly accurate, but it'll do.
+                    {
+                        GenerationProgress = (int)(100 * i / populationSize);
+                    }
+                });
+
+                // 2. Name Champions
+                Console.WriteLine("\nNaming Champions");
+                for (int i = 0; i <= populationSize; i++)
+                {
+                    FindChampions(population[i]);
+                }
+
+                // 3. Breed New Generation
+                GenerationProgress = 0;
+                Console.WriteLine("Breeding");
+                Breed();
+
+                generation++;
+            }
+        }
+
 
         private void GeneticAlgorithm()
         {
