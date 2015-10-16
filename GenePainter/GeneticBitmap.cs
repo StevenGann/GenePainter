@@ -257,8 +257,10 @@ namespace GenePainter
 
             lock (this)
             {
-                tb = new Bitmap(targetBitmap);
-                gb = new Bitmap(generatedBitmap);
+                //tb = new Bitmap(targetBitmap);
+                //gb = new Bitmap(generatedBitmap);
+                tb = ResizeImage(targetBitmap, 200, 200);
+                gb = ResizeImage(generatedBitmap, 200, 200);
 
                 ta_t = new Bitmap(tb);
                 ta_g = new Bitmap(gb);
