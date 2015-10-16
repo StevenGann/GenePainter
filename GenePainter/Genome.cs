@@ -126,9 +126,35 @@ namespace GenePainter
             {
                 if (RNG.Next(100) <= rate)
                 {
-                    //geneList[i] = (byte)RNG.Next(255);
+                    //Shift a value over
                     geneList[i] += (byte)RNG.Next(255 - (int)geneList[i]);
                     geneList[i] -= (byte)RNG.Next((int)geneList[i]);
+                }
+
+                if (RNG.Next(100) <= rate)
+                {
+                    //Nudge a value a bit
+                    geneList[i] += (byte)RNG.Next(rate);
+                    geneList[i] -= (byte)RNG.Next(rate);
+                }
+
+                if (RNG.Next(100) <= (rate/2))
+                {
+                    //Swap some values
+                    int n = RNG.Next(100);
+                    if (n <= 50){ n = 8;}
+                    else{ n = -8;}
+                    if (i + n > geneList.Count - 1) { n = -8; }
+                    if (i + n < 0) { n = 8; }
+                    byte a = geneList[i];
+                    geneList[i] = geneList[i + n];
+                    geneList[i + n] = a;
+                }
+
+                if (RNG.Next(100) <= (rate / 4))
+                {
+                    //Totally random value!
+                    geneList[i] = (byte)(((float)RNG.Next(byte.MaxValue) + (float)RNG.Next(byte.MaxValue))/2.0f);
                 }
             }
         }
