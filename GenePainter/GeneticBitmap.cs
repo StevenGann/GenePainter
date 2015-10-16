@@ -241,7 +241,7 @@ namespace GenePainter
 
             generatedBitmap = GenomeToBitmap(genome);
 
-            int sampleSize = (int)((float)((int)targetBitmap.Width * (int)targetBitmap.Height) * ((float)accuracy/100.0f));
+            int sampleSize = 0;// (int)((float)((int)targetBitmap.Width * (int)targetBitmap.Height) * ((float)accuracy / 100.0f));
 
             Bitmap tb;
             Bitmap gb;
@@ -261,6 +261,7 @@ namespace GenePainter
                 //gb = new Bitmap(generatedBitmap);
                 tb = ResizeImage(targetBitmap, 200, 200);
                 gb = ResizeImage(generatedBitmap, 200, 200);
+                sampleSize = (int)((float)(tb.Width * tb.Height) * ((float)accuracy / 100.0f));
 
                 ta_t = new Bitmap(tb);
                 ta_g = new Bitmap(gb);
@@ -437,8 +438,8 @@ namespace GenePainter
 
             lock (this)
             {
-                tw = targetBitmap.Width;
-                th = targetBitmap.Height;
+                tw = 200; // = targetBitmap.Width;
+                th = 200; // = targetBitmap.Height;
             }
 
             Bitmap output = new Bitmap(tw, th);
@@ -581,10 +582,10 @@ namespace GenePainter
             using (var graphics = Graphics.FromImage(destImage))
             {
                 graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                graphics.CompositingQuality = CompositingQuality.HighSpeed;
+                graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+                graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
 
                 using (var wrapMode = new ImageAttributes())
                 {
