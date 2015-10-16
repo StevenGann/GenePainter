@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Drawing.Drawing2D;
 
 namespace GenePainter
 {
@@ -365,6 +366,8 @@ namespace GenePainter
 
         private float FitnessThreadMethod(int localSampleSize, Bitmap localTarget, Bitmap localGenerated, Random localRNG)
         {
+            //localTarget = ResizeImage(localTarget, 100, 100);
+            //localGenerated = ResizeImage(localGenerated, 100, 100);
 
             float fitness = 0;
 
@@ -438,6 +441,9 @@ namespace GenePainter
 
             Bitmap output = new Bitmap(tw, th);
             Graphics g = Graphics.FromImage(output);
+            g.CompositingQuality = CompositingQuality.HighSpeed;
+            g.InterpolationMode = InterpolationMode.NearestNeighbor;
+            g.CompositingMode = CompositingMode.SourceOver;
 
             if (style == 0)
             {
@@ -449,7 +455,7 @@ namespace GenePainter
                     if ((genome.Size - index) >= 8)
                     {
 
-                        int ca = genome[index];
+                        int ca = (int)((float)genome[index] * 0.75f + 10f);
                         index++;
                         int cr = genome[index];
                         index++;
@@ -461,9 +467,9 @@ namespace GenePainter
                         index++;
                         int sy = (int)(((float)genome[index] / 255.0f) * (float)th);
                         index++;
-                        int sw = (int)(((float)genome[index] / 255.0f) * (float)tw);
+                        int sw = (int)(((float)genome[index] / (255.0f * 1.5f)) * (float)tw);
                         index++;
-                        int sh = (int)(((float)genome[index] / 255.0f) * (float)th);
+                        int sh = (int)(((float)genome[index] / (255.0f * 1.5f)) * (float)th);
 
                         sx -= (int)(sw / 2);
                         sy -= (int)(sh / 2);
@@ -563,7 +569,30 @@ namespace GenePainter
         }
 
 
+        public static Bitmap ResizeImage(Bitmap image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
 
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
 
         public static void ShowConsoleWindow()
         {
