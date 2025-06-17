@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "Y1QTYz1WFOo=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\owner\\Documents\\GitHub\\GenePainter\\GenePainter\\GenePainter.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\owner\\.nuget\\packages\\raylib-cs\\7.0.1\\raylib-cs.7.0.1.nupkg.sha512",
+    "C:\\Users\\owner\\.nuget\\packages\\sixlabors.imagesharp\\3.1.10\\sixlabors.imagesharp.3.1.10.nupkg.sha512"
+  ],
+  "logs": []
+}
