@@ -1,7 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Raylib_cs;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using Color = Raylib_cs.Color;
+using ImageSharpImage = SixLabors.ImageSharp.Image;
 
 namespace GenePainter
 {
@@ -9,6 +14,12 @@ namespace GenePainter
     {
         private RenderTexture2D renderTexture;
         private readonly int resolution;
+        private const int SAMPLE_COUNT = 100; // Number of random pixels to sample
+
+        /// <summary>
+        /// Gets the resolution used for rendering genomes.
+        /// </summary>
+        public int Resolution => resolution;
 
         public GeneticTexture(int resolution)
         {
@@ -20,7 +31,7 @@ namespace GenePainter
         /// </summary>
         /// <param name="genomes">The genomes to render.</param>
         /// <param name="resolution">The width and height in pixels for each genome's rendering area.</param>
-        public Texture2D RenderGenomes(IReadOnlyList<Genome> genomes, int resolution)
+        public Texture2D RenderGenomes(IReadOnlyList<Genome> genomes, int resolution, Raylib_cs.Image target)
         {
             if (genomes == null || genomes.Count == 0)
                 throw new ArgumentException("Genomes list cannot be null or empty", nameof(genomes));
@@ -63,7 +74,56 @@ namespace GenePainter
 
             Raylib.EndTextureMode();
 
+            // Convert the render texture to an image for fitness evaluation
+            var renderImage = Raylib.LoadImageFromTexture(renderTexture.Texture);
+
+            // Evaluate fitness for each genome
+            for (int i = 0; i < genomes.Count; i++)
+            {
+                int row = i / gridSize;
+                int col = i % gridSize;
+                int x = col * resolution;
+                int y = row * resolution;
+
+                genomes[i].Fitness = EvaluateFitness(renderImage, target, x, y, resolution);
+            }
+
+            // Clean up the temporary image
+            Raylib.UnloadImage(renderImage);
+
             return renderTexture.Texture;
+        }
+
+        private unsafe float EvaluateFitness(Raylib_cs.Image candidate, Raylib_cs.Image target, int x, int y, int resolution)
+        {
+            var random = new Random();
+            float totalDifference = 0;
+
+            // Sample random pixels and compare
+            for (int i = 0; i < SAMPLE_COUNT; i++)
+            {
+                // Generate random coordinates within the genome's area
+                int sampleX = random.Next(resolution);
+                int sampleY = random.Next(resolution);
+
+                // Get colors from both images
+                Color candidateColor = Raylib.GetImageColor(candidate, sampleX + x, sampleY + y);
+                Color targetColor = Raylib.GetImageColor(target, sampleX, sampleY);
+
+                // Calculate color difference (RGB distance)
+                float rDiff = candidateColor.R - targetColor.R;
+                float gDiff = candidateColor.G - targetColor.G;
+                float bDiff = candidateColor.B - targetColor.B;
+
+                // Sum of squared differences
+                totalDifference += (rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
+            }
+
+            // Convert to fitness score (1 / (1 + totalDifference))
+            // Adding 1 to avoid division by zero
+            float fitness = 1f / (0.1f + totalDifference);
+            //Console.WriteLine(fitness);
+            return fitness;
         }
 
         private void RenderGenome(Genome genome, int offsetX, int offsetY, int resolution)
@@ -71,8 +131,18 @@ namespace GenePainter
             // Set scissor mode to clip drawing to this genome's area
             Raylib.BeginScissorMode(offsetX, offsetY, resolution, resolution);
 
-            foreach (var gene in genome.Genes)
+            // Draw the first gene as a full-size background
+            if (genome.Genes.Count > 0)
             {
+                var firstGene = genome.Genes[0];
+                Color color = ColorFromHSV(firstGene.Hue, firstGene.Saturation, firstGene.Value, firstGene.Alpha);
+                Raylib.DrawRectangle(offsetX, offsetY, resolution, resolution, color);
+            }
+
+            // Draw remaining genes on top
+            for (int i = 1; i < genome.Genes.Count; i++)
+            {
+                var gene = genome.Genes[i];
                 // Convert normalized coordinates to pixel coordinates
                 float x = offsetX + (gene.X * resolution);
                 float y = offsetY + (gene.Y * resolution);

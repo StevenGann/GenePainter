@@ -10,31 +10,37 @@ namespace GenePainter
         {
             const int screenWidth = 1024;
             const int screenHeight = 1024;
-            const int genomeCount = 8;
-            const int resolution = 256; // Resolution for each genome
+            const int initialPopulationSize = 100; // Start with a small population
+            const int genesPerGenome = 64; 
+            const int resolution = 512; // Resolution for each genome
+            const int maxPopulationSize = 256; // Maximum number of genomes allowed
 
             // Initialize Raylib
-            Raylib.InitWindow(screenWidth, screenHeight, "GenePainter - 1024 Genomes");
+            Raylib.InitWindow(screenWidth, screenHeight, "GenePainter - Evolving Genomes");
             Raylib.SetTargetFPS(60);
 
-            // Create genetic texture
-            var texture = new GeneticTexture(resolution);
-
-            // Generate random genomes
-            var genomes = new List<Genome>();
-            var random = new Random(42); // Fixed seed for reproducibility
-            for (int i = 0; i < genomeCount; i++)
+            // Load and prepare target image
+            Image targetImage = Raylib.LoadImage("target.png");
+            if (targetImage.Width == 0 || targetImage.Height == 0)
             {
-                var genome = new Genome(5); // Create genome with 5 genes
-                genomes.Add(genome);
+                Raylib.CloseWindow();
+                System.Console.WriteLine("Error: Could not load target.png");
+                return;
             }
 
-            // Render genomes to texture
-            var result = texture.RenderGenomes(genomes, resolution);
+            // Scale target image to be square and match resolution
+            Raylib.ImageResize(ref targetImage, resolution, resolution);
+
+            // Initialize GenePool with target
+            GenePool.Initialize(initialPopulationSize, genesPerGenome, resolution, maxPopulationSize);
+            GenePool.Target = targetImage;
 
             // Main game loop
             while (!Raylib.WindowShouldClose())
             {
+                // Perform one generation of evolution
+                var result = GenePool.Generation();
+
                 Raylib.BeginDrawing();
                 Raylib.ClearBackground(new Color(0, 0, 0, 255));
 
@@ -43,8 +49,10 @@ namespace GenePainter
                 var destRect = new Rectangle(0, 0, screenWidth, screenHeight);
                 Raylib.DrawTexturePro(result, srcRect, destRect, new Vector2(0, 0), 0, new Color(255, 255, 255, 255));
 
-                // Draw FPS
+                // Draw FPS and population info
                 Raylib.DrawFPS(10, 10);
+                Raylib.DrawText($"Population Size: {GenePool.Population.Count}", 10, 40, 20, new Color(255, 255, 255, 255));
+                Raylib.DrawText($"Best Fitness: {GenePool.Population[0].Fitness:F2}", 10, 70, 20, new Color(255, 255, 255, 255));
 
                 Raylib.EndDrawing();
             }

@@ -160,21 +160,129 @@ namespace GenePainter
         public void Mutate(float mutationRate)
         {
             var random = new Random();
+
+            // Determine which types of mutations to apply
+            if (random.NextDouble() < mutationRate * 0.2) // 20% chance of structural mutations
+            {
+                switch (random.Next(5)) // 5 types of structural mutations
+                {
+                    case 0: // Gene addition
+                        if (Genes.Count < 100) // Prevent unlimited growth
+                        {
+                            int insertIndex = random.Next(Genes.Count + 1);
+                            Genes.Insert(insertIndex, new Gene());
+                        }
+                        break;
+
+                    case 1: // Gene transposition
+                        if (Genes.Count > 1)
+                        {
+                            int fromIndex = random.Next(Genes.Count);
+                            int toIndex = random.Next(Genes.Count);
+                            var gene = Genes[fromIndex];
+                            Genes.RemoveAt(fromIndex);
+                            Genes.Insert(toIndex, gene);
+                        }
+                        break;
+
+                    case 2: // Gene deletion
+                        if (Genes.Count > 1) // Keep at least one gene
+                        {
+                            int deleteIndex = random.Next(Genes.Count);
+                            Genes.RemoveAt(deleteIndex);
+                        }
+                        break;
+
+                    case 3: // Gene duplication
+                        if (Genes.Count < 100) // Prevent unlimited growth
+                        {
+                            int dupIndex = random.Next(Genes.Count);
+                            Genes.Insert(dupIndex, Genes[dupIndex].Clone());
+                        }
+                        break;
+
+                    case 4: // Gene inversion
+                        if (Genes.Count > 2)
+                        {
+                            int start = random.Next(Genes.Count - 1);
+                            int length = random.Next(2, Math.Min(5, Genes.Count - start));
+                            Genes.Reverse(start, length);
+                        }
+                        break;
+                }
+            }
+
+            // Apply property mutations to existing genes
             foreach (var gene in Genes)
             {
                 if (random.NextDouble() < mutationRate)
                 {
-                    // Randomly modify one property
-                    switch (random.Next(8))
+                    // Determine mutation type for this gene
+                    switch (random.Next(9)) // 9 types of mutations
                     {
-                        case 0: gene.X = (float)random.NextDouble(); break;
-                        case 1: gene.Y = (float)random.NextDouble(); break;
-                        case 2: gene.Width = (float)random.NextDouble() * 0.5f; break;
-                        case 3: gene.Height = (float)random.NextDouble() * 0.5f; break;
-                        case 4: gene.Hue = (float)random.NextDouble() * 255f; break;
-                        case 5: gene.Saturation = (float)random.NextDouble() * 255f; break;
-                        case 6: gene.Value = (float)random.NextDouble() * 255f; break;
-                        case 7: gene.Alpha = (float)random.NextDouble() * 255f; break;
+                        case 0: // Random property change
+                            switch (random.Next(8))
+                            {
+                                case 0: gene.X = (float)random.NextDouble(); break;
+                                case 1: gene.Y = (float)random.NextDouble(); break;
+                                case 2: gene.Width = (float)random.NextDouble() * 0.5f; break;
+                                case 3: gene.Height = (float)random.NextDouble() * 0.5f; break;
+                                case 4: gene.Hue = (float)random.NextDouble() * 255f; break;
+                                case 5: gene.Saturation = (float)random.NextDouble() * 255f; break;
+                                case 6: gene.Value = (float)random.NextDouble() * 255f; break;
+                                case 7: gene.Alpha = (float)random.NextDouble() * 255f; break;
+                            }
+                            break;
+
+                        case 1: // Small random adjustment to all properties
+                            float adjustment = (float)(random.NextDouble() * 0.2 - 0.1); // -0.1 to 0.1
+                            gene.X = (gene.X + adjustment + 1) % 1f;
+                            gene.Y = (gene.Y + adjustment + 1) % 1f;
+                            gene.Width = Math.Max(0.01f, Math.Min(0.5f, gene.Width * (1 + adjustment)));
+                            gene.Height = Math.Max(0.01f, Math.Min(0.5f, gene.Height * (1 + adjustment)));
+                            gene.Hue = (gene.Hue + adjustment * 255f + 255f) % 255f;
+                            gene.Saturation = (gene.Saturation + adjustment * 255f + 255f) % 255f;
+                            gene.Value = (gene.Value + adjustment * 255f + 255f) % 255f;
+                            gene.Alpha = (gene.Alpha + adjustment * 255f + 255f) % 255f;
+                            break;
+
+                        case 2: // Color shift
+                            float hueShift = (float)(random.NextDouble() * 30 - 15); // -15 to 15
+                            gene.Hue = (gene.Hue + hueShift + 255f) % 255f;
+                            break;
+
+                        case 3: // Size adjustment
+                            float sizeFactor = (float)(random.NextDouble() * 0.4 + 0.8); // 0.8 to 1.2
+                            gene.Width = Math.Max(0.01f, Math.Min(0.5f, gene.Width * sizeFactor));
+                            gene.Height = Math.Max(0.01f, Math.Min(0.5f, gene.Height * sizeFactor));
+                            break;
+
+                        case 4: // Position shift
+                            float posShift = (float)(random.NextDouble() * 0.2 - 0.1); // -0.1 to 0.1
+                            gene.X = (gene.X + posShift + 1) % 1f;
+                            gene.Y = (gene.Y + posShift + 1) % 1f;
+                            break;
+
+                        case 5: // Transparency adjustment
+                            float alphaAdjust = (float)(random.NextDouble() * 0.4 - 0.2); // -0.2 to 0.2
+                            gene.Alpha = Math.Max(0, Math.Min(255, gene.Alpha + alphaAdjust * 255f));
+                            break;
+
+                        case 6: // Shape type change
+                            gene.ShapeType = (ShapeType)random.Next(Enum.GetValues(typeof(ShapeType)).Length);
+                            break;
+
+                        case 7: // Color intensity adjustment
+                            float intensityAdjust = (float)(random.NextDouble() * 0.4 - 0.2); // -0.2 to 0.2
+                            gene.Saturation = Math.Max(0, Math.Min(255, gene.Saturation + intensityAdjust * 255f));
+                            gene.Value = Math.Max(0, Math.Min(255, gene.Value + intensityAdjust * 255f));
+                            break;
+
+                        case 8: // Aspect ratio adjustment
+                            float aspectAdjust = (float)(random.NextDouble() * 0.4 - 0.2); // -0.2 to 0.2
+                            gene.Width = Math.Max(0.01f, Math.Min(0.5f, gene.Width * (1 + aspectAdjust)));
+                            gene.Height = Math.Max(0.01f, Math.Min(0.5f, gene.Height * (1 - aspectAdjust)));
+                            break;
                     }
                 }
             }
