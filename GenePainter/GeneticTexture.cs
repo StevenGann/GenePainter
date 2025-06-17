@@ -20,7 +20,7 @@ namespace GenePainter
         /// </summary>
         /// <param name="genomes">The genomes to render.</param>
         /// <param name="resolution">The width and height in pixels for each genome's rendering area.</param>
-        public void RenderGenomes(IReadOnlyList<Genome> genomes, int resolution)
+        public Texture2D RenderGenomes(IReadOnlyList<Genome> genomes, int resolution)
         {
             if (genomes == null || genomes.Count == 0)
                 throw new ArgumentException("Genomes list cannot be null or empty", nameof(genomes));
@@ -62,6 +62,8 @@ namespace GenePainter
             }
 
             Raylib.EndTextureMode();
+
+            return renderTexture.Texture;
         }
 
         private void RenderGenome(Genome genome, int offsetX, int offsetY, int resolution)
